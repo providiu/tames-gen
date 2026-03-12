@@ -6,7 +6,7 @@ High-performance generator for **scored distinguished point (DP) databases** use
 
 ## What it does
 
-`tame_phase.c` generates the **scored distinguished point (DP) database** used by the wild phase (`kangaroo_wild.c by arulbero`).
+`tame_phase.c` generates the **scored distinguished point (DP) database** used by the wild phase (`kangaroo_wild.c by arulbero [Kanagaroo Wild]([https://en.wikipedia.org/wiki/Pollard%27s_kangaroo_algorithm](https://github.com/arulbero/kangaroo-wild))`).
 
 It runs massively parallel **"tame kangaroo" random walks** on the **secp256k1 elliptic curve**, collecting distinguished points and their distances from a known starting point.
 
