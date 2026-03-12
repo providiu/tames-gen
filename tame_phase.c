@@ -1,7 +1,7 @@
 /*
  * tame_phase.c
  * Pollard's kangaroo tame walk: generates the scored DP database
- * for use by kangaroo_wild.c (wild phase).
+ * for use with  kangaroo_wild.c (wild phase) by arulbero
  *
  * Author: providiu
  * License: MIT (see LICENSE file)
@@ -1582,3 +1582,4 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
