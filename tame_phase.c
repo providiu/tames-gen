@@ -730,22 +730,24 @@ static void* tame_worker(void* arg) {
                 steps_since_respawn[i] = 1;
                 visited_dp_cnt[i] = 0;
 
-                /* Tame walk: start at midpoint + uniform random offset.
-                 * cd[i] = midpoint + offset (ABSOLUTE scalar) */
+                /* Tame walk: start at offset*G where offset is random in [-W/2, W/2].
+                 * cd[i] = offset (same scalar region as wild walk).
+                 * Wild walk starts at (target - midpoint + d)*G with cd = d.
+                 * Collision formula: target = td + midpoint - cd_wild
+                 * requires td = tame scalar, so point must be at offset*G. */
                 unsigned __int128 r = ((unsigned __int128)xorshift64(&rng) << 64)
                                       | xorshift64(&rng);
                 __int128 offset = (__int128)(r % ((unsigned __int128)half_range * 2 + 1))
                                   - (__int128)half_range;
-                __int128 abs_d = mid + offset;
-                cd[i] = abs_d;
+                cd[i] = offset;
 
-                /* Compute abs_d * G */
-                __int128 ad = (abs_d >= 0) ? abs_d : -abs_d;
+                /* Compute offset * G (NOT (midpoint + offset) * G) */
+                __int128 ad = (offset >= 0) ? offset : -offset;
                 uint64_t k[4] = {0,0,0,0};
                 k[0] = (uint64_t)ad;
                 k[1] = (uint64_t)((unsigned __int128)ad >> 64);
                 scalar_mult(&cx[i], k, &G_pt);
-                if (abs_d < 0)
+                if (offset < 0)
                     point_neg(&cx[i], &cx[i]);
 
                 /* Y-canonicalization */
@@ -886,10 +888,10 @@ static void* tame_worker(void* arg) {
                 if (visited_dp_cnt[i] < VISITED_DP_CAP)
                     visited_dp[i][visited_dp_cnt[i]++] = xhi;
 
-                /* Insert into hash table. Store RELATIVE offset from midpoint,
-                   because kangaroo_wild collision formula is:
+                /* Insert into hash table. cd[i] is the offset from midpoint
+                   (matching wild walk convention). Collision formula:
                    base_key = td[m] + midpoint - pend_dist[k] */
-                int is_new = ht_insert(xhi, cd[i] - g_midpoint);
+                int is_new = ht_insert(xhi, cd[i]);
                 if (is_new) {
                     __sync_fetch_and_add(&g_dp_count, 1);
                 }
