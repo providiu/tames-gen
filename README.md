@@ -101,23 +101,78 @@ Descriptions:
 
 # Usage
 
-## Basic example
+## Basic Examples
 
-Generate **16777216 scored distinguished points** for range **2^69 – 2^70** 
-1. It takes about 55m on my PC 
-2. Change -w to fit to your numbers of cores/threads)
+### Generate 16M scored DPs for range 2^69 – 2^70
+
+Small database (~500 MB)
 
 ```bash
 ./tame_phase -n 16777216 -r 69 70 -g 16 -w 192 -b 60 --scored
 ```
 
+Estimated time: **~40 minutes** at **~1300 M/s** (192 threads)
+
 ---
 
-Generate **400M scored distinguished points** for range **2^74 – 2^75**
+### Generate 400M scored DPs for range 2^74 – 2^75
+
+Large database (~24 GB)
 
 ```bash
-./tame_phase -n 400000000 -r 74 75 -g 16 --scored
+./tame_phase -n 400000000 -r 74 75 -g 16 -w 192 -b 60 --scored
 ```
+
+Estimated time: **~17 hours** at **~1300 M/s** (192 threads)
+
+---
+
+# Estimating Generation Time
+
+In **scored mode**, the program collects **~3× the target distinguished points**, then selects the top **N**.
+
+Each distinguished point requires on average:
+
+```
+2^global_bits
+```
+
+steps to find.
+
+### Formulas
+
+```
+Total steps = 3 × N × 2^global_bits        (scored mode)
+Total steps = N × 2^global_bits            (unscored mode)
+Time (seconds) = Total steps / speed
+```
+
+---
+
+## Example Calculation
+
+| Parameter                   | Example        |
+| --------------------------- | -------------- |
+| N (target DPs)              | 400,000,000    |
+| global_bits                 | 16             |
+| Collect count (scored, 3×N) | 1,200,000,000  |
+| Steps per DP (2^16)         | 65,536         |
+| Total steps                 | ~78.6 trillion |
+| Speed (192 threads)         | ~1,300 M/s     |
+| Estimated time              | ~16.8 hours    |
+
+---
+
+**Note**
+
+Actual speed depends on:
+
+* CPU architecture
+* number of threads
+* batch size
+
+Use the **M/s value printed during the first seconds of a run** to estimate total runtime for your hardware.
+
 
 ---
 
