@@ -105,7 +105,7 @@ Descriptions:
 
 Generate **16777216 scored distinguished points** for range **2^69 – 2^70** 
 1. It takes about 55m on my PC 
-2. Change -w to fit into your numbers of cores/threads)
+2. Change -w to fit to your numbers of cores/threads)
 
 ```bash
 ./tame_phase -n 16777216 -r 69 70 -g 16 -w 192 -b 60 --scored
