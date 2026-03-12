@@ -1,7 +1,7 @@
 /*
  * tame_phase.c
  * Pollard's kangaroo tame walk: generates the scored DP database
- * for use with  kangaroo_wild.c (wild phase) by arulbero
+ * for use by kangaroo_wild.c (wild phase).
  *
  * Author: providiu
  * License: MIT (see LICENSE file)
@@ -886,8 +886,10 @@ static void* tame_worker(void* arg) {
                 if (visited_dp_cnt[i] < VISITED_DP_CAP)
                     visited_dp[i][visited_dp_cnt[i]++] = xhi;
 
-                /* Insert into hash table. cd[i] is the ABSOLUTE scalar. */
-                int is_new = ht_insert(xhi, cd[i]);
+                /* Insert into hash table. Store RELATIVE offset from midpoint,
+                   because kangaroo_wild collision formula is:
+                   base_key = td[m] + midpoint - pend_dist[k] */
+                int is_new = ht_insert(xhi, cd[i] - g_midpoint);
                 if (is_new) {
                     __sync_fetch_and_add(&g_dp_count, 1);
                 }
@@ -1582,4 +1584,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
