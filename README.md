@@ -179,7 +179,7 @@ Use the **M/s value printed during the first seconds of a run** to estimate tota
 ## Custom workers and batch size
 
 ```bash
-./tame_phase -n 536870912 -r 74 75 -g 16 -w 192 -b 60 --scored
+./tame_phase -n 8500000000 -g 14 -r 89 90 -w 192 -b 20 --prefix 90_scored_14 --checkpoint 30
 ```
 
 ---
