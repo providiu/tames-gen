@@ -87,7 +87,7 @@ static void* hugepage_alloc(size_t size, size_t *actual_size) {
  * COMPILE-TIME CONSTANTS
  * ========================================================= */
 
-#define MAX_BATCH_K       128
+#define MAX_BATCH_K       256
 #define MAX_NUM_WORKERS   512
 #define MAX_DIST_BYTES    16
 
@@ -1586,3 +1586,4 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
